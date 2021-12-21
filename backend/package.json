@@ -1,0 +1,20 @@
+{
+  "name": "express-push",
+  "version": "1.0.0",
+  "description": "Express server Push Notification",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.1",
+    "express": "^4.17.2",
+    "web-push": "^3.4.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
