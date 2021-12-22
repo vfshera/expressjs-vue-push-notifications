@@ -29,29 +29,30 @@ export default {
     };
   },
   methods: {
-    appUpdateUI: function (e) {
+    appUpdateUI(e) {
       this.registration = e.detail;
       this.isRefresh = true;
     },
     updateApp() {
-
-      console.log("Update App");
+      //ACCEPTS UPDATE
       this.isRefresh = false;
       if (this.registration || this.registration.waiting) {
         this.registration.waiting.postMessage({ type: "SKIP_WAITING" });
       }
     },
     async installApp() {
+      //HANDLES APP INSTALL
 
       if (this.deferredPrompt !== null) {
 
-        console.log("Installing Attempt");
 
         this.deferredPrompt.prompt();
 
         const { outcome } = await this.deferredPrompt.userChoice;
 
         if (outcome === "accepted") {
+
+          //IF USER INSTALLS
 
           this.deferredPrompt = null;
 
@@ -61,13 +62,15 @@ export default {
   },
   created() {
 
-
+    //HANDLES INSTALL PROMPT
     window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();      
       this.deferredPrompt = e;
         this.notInstalled = true;
     });
 
 
+    //IF NEW UPDATE
     document.addEventListener("serviceWorkerUpdateEvent", this.appUpdateUI, {
       once: true,
     });

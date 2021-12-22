@@ -8,10 +8,14 @@ const publicVapidKey =
 if (process.env.NODE_ENV === "production") {
   register(`${process.env.BASE_URL}service-worker.js`, {
     ready(registration) {
+
+      //REQUEST PUSH NOTIFICATION PERMISSION
       Notification.requestPermission(function (status) {
         if (status === "granted") {
+          //IF PERMISSION GRANTED
           console.log("Notification Permission Granted!");
 
+          //SUBSCRIBE TO NOTIFICATION
           registration.pushManager
             .subscribe({
               userVisibleOnly: true,
@@ -19,6 +23,7 @@ if (process.env.NODE_ENV === "production") {
             })
             .then(
               (subscription) => {
+                //PUSH TO BACKEND 
                 sendSubsciption(subscription);
               },
               (err) => console.log("Subscription Error : ", err)
@@ -37,6 +42,8 @@ if (process.env.NODE_ENV === "production") {
     },
     updated(registration) {
       console.log("New content is available; please refresh.");
+
+      //CUSTOM EVENT WHEN A NEW UPDATE IS AVAILABLE ie its handled in App.vue at created() hook
 
       document.dispatchEvent(
         new CustomEvent("serviceWorkerUpdateEvent", { detail: registration })
@@ -67,6 +74,9 @@ function urlBase64ToUint8Array(base64String) {
   }
   return outputArray;
 }
+
+
+
 
 function sendSubsciption(subscription) {
 
