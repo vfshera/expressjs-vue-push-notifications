@@ -8,19 +8,18 @@
 <script>
 export default {
   name: "UpdateBanner",
-  methods:{
-      refresh(){
-          this.$emit('refresh-app')
-      }
-  }
+  methods: {
+    refresh() {
+      this.$emit("refresh-app");
+    },
+  },
 };
 </script>
 
 <style scoped>
 #updateBanner {
   background: #2a9b4c;
-  padding: 30px 70px;
-  padding: 20px;
+  padding: 10px;
   color: white;
   display: flex;
   justify-content: center;
@@ -35,5 +34,13 @@ button {
   margin-left: 10px;
   padding: 5px 20px;
   border-radius: 5px;
+}
+
+@media screen and (max-width: 600px) {
+  #updateBanner,
+  button {
+    font-size: 12px !important;
+    font-style: normal !important;
+  }
 }
 </style>

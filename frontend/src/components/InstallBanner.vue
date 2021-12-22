@@ -26,7 +26,7 @@ export default {
 <style scoped>
 #install-banner {
   background: #2a9b4c;
-  padding: 30px 70px;
+  padding: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -47,5 +47,20 @@ button {
   font-size: 30px;
   color: white;
   cursor: pointer;
+}
+
+
+@media screen and (max-width: 600px) {
+  #install-banner, button {
+  font-size: 12px !important;
+  font-style: normal !important;
+}
+
+button{
+  margin:0 10px;
+
+}
+
+
 }
 </style>
