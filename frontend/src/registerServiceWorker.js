@@ -8,28 +8,30 @@ const publicVapidKey =
 if (process.env.NODE_ENV === "production") {
   register(`${process.env.BASE_URL}service-worker.js`, {
     ready(registration) {
+      if (!Notification.permission == "granted") {
+        //IF PERMISSION NOT GRANTED
+        //REQUEST PUSH NOTIFICATION PERMISSION
+        Notification.requestPermission().then((status) => {
+          if (status === "granted") {
+            //IF PERMISSION GRANTED
+            console.log("Notification Permission Granted!");
 
-      //REQUEST PUSH NOTIFICATION PERMISSION
-      Notification.requestPermission(function (status) {
-        if (status === "granted") {
-          //IF PERMISSION GRANTED
-          console.log("Notification Permission Granted!");
-
-          //SUBSCRIBE TO NOTIFICATION
-          registration.pushManager
-            .subscribe({
-              userVisibleOnly: true,
-              applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
-            })
-            .then(
-              (subscription) => {
-                //PUSH TO BACKEND 
-                sendSubsciption(subscription);
-              },
-              (err) => console.log("Subscription Error : ", err)
-            );
-        }
-      });
+            //SUBSCRIBE TO NOTIFICATION
+            registration.pushManager
+              .subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
+              })
+              .then(
+                (subscription) => {
+                  //PUSH TO BACKEND
+                  sendSubsciption(subscription);
+                },
+                (err) => console.log("Subscription Error : ", err)
+              );
+          }
+        });
+      }
     },
     registered() {
       console.log("Service worker has been registered.");
@@ -75,14 +77,7 @@ function urlBase64ToUint8Array(base64String) {
   return outputArray;
 }
 
-
-
-
 function sendSubsciption(subscription) {
-
-  console.log("SUB : ",subscription);
-
-
   fetch("http://localhost:3000/subscribe", {
     method: "POST",
     body: JSON.stringify(subscription),
