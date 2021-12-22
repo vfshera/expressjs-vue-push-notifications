@@ -8,7 +8,7 @@ const publicVapidKey =
 if (process.env.NODE_ENV === "production") {
   register(`${process.env.BASE_URL}service-worker.js`, {
     ready(registration) {
-      if (!Notification.permission == "granted") {
+      // if (!Notification.permission == "granted") {
         //IF PERMISSION NOT GRANTED
         //REQUEST PUSH NOTIFICATION PERMISSION
         Notification.requestPermission().then((status) => {
@@ -31,7 +31,7 @@ if (process.env.NODE_ENV === "production") {
               );
           }
         });
-      }
+      // }
     },
     registered() {
       console.log("Service worker has been registered.");

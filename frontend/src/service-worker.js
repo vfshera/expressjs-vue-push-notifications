@@ -5,7 +5,7 @@ workbox.setConfig({
 
 
 //PREFIX TO CACHE NAME
-workbox.core.setCacheNameDetails({prefix: "pwatest"});
+workbox.core.setCacheNameDetails({prefix: "pwaapp"});
 
 
 //LISTEN TO MESSAGE FROM UPDATE BANNER ie UpdateBanner.vue
