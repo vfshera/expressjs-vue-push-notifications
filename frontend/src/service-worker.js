@@ -23,19 +23,21 @@ let click_open_url;
 
 self.addEventListener("push", function(event){
 
-  let push_message = event.data.text();
+  console.log("Push Event", event.data.text());
+
+  let push_message = event.data.json();
 
   click_open_url = "https://sheraclassics.co.ke";
 
   const options = {
-    body: push_message.body,
+    body: push_message.description,
     icon: './img/logo.82b9c7a5.png',
     image: './img/banner.jpg',
     vibrate: [200,100,200,100,200,100,200],
     tag: "vibration-sample"
    };
 
-   event.waitUntil(self.registration.showNotification("Title",options));
+   event.waitUntil(self.registration.showNotification(push_message.title,options));
 
 });
 

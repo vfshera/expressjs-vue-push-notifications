@@ -2,7 +2,7 @@
 module.exports = {
   
   pwa: {
-    name: 'TestPWA',
+    name: 'PWA Site',
     themeColor: '#4DBA87',
     msTileColor: '#000000',
     appleMobileWebAppCapable: 'yes',

@@ -1,12 +1,12 @@
 const express = require("express")
 const webPush = require("web-push")
 const bodyParser = require("body-parser")
-const path = require("path")
+const cors = require("cors")
 
 const app = express();
 
 app.use(bodyParser.json())
-
+app.use(cors())
 
 //WEBPUSH KEYS
 
@@ -22,14 +22,14 @@ app.get('/',(req,res) =>{
 })
 
 //SUBSCRIBTION ROUTE
-app.get('/subscribe',(req,res) =>{
+app.post('/subscribe',(req,res) =>{
 
     // get subscription object
     const subscription = req.body;
 
     res.status(201).json({})
 
-    const payload = JSON.stringify({title: "Push test"})
+    const payload = JSON.stringify({title: "Express Push", description: "Express Push Notification with WebPush"})
 
     webPush.sendNotification(subscription,payload).catch(err => console.error(err))
 })

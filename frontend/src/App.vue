@@ -1,23 +1,23 @@
 <template>
   <div id="app">
-    <InstallBanner v-if="notInstalled" @click="installApp"></InstallBanner>
+    <InstallBanner v-if="notInstalled" v-on:install-app="installApp"></InstallBanner>
+
+    <UpdateBanner v-if="isRefresh" v-on:refresh-app="updateApp" ></UpdateBanner>
 
     <img alt="Vue logo" src="./assets/logo.png" />
-    <h1>PWA Example</h1>
-    <p>With Notifications and Update!</p>
+    <h1>PWA</h1>
+    <p>With Notifications , Install and Update!</p>
 
-    <div v-if="isRefresh" id="updateBanner">
-      <span>New Update Available!</span>
-      <button @click="updateApp">Refresh</button>
-    </div>
+    
   </div>
 </template>
 
 <script>
 import InstallBanner from "./components/InstallBanner.vue";
+import UpdateBanner from "./components/UpdateBanner.vue";
 export default {
   name: "App",
-  components: { InstallBanner },
+  components: { InstallBanner, UpdateBanner },
 
   data: function () {
     return {
@@ -34,17 +34,27 @@ export default {
       this.isRefresh = true;
     },
     updateApp() {
+
+      console.log("Update App");
       this.isRefresh = false;
       if (this.registration || this.registration.waiting) {
         this.registration.waiting.postMessage({ type: "SKIP_WAITING" });
       }
     },
     async installApp() {
+
       if (this.deferredPrompt !== null) {
+
+        console.log("Installing Attempt");
+
         this.deferredPrompt.prompt();
+
         const { outcome } = await this.deferredPrompt.userChoice;
+
         if (outcome === "accepted") {
+
           this.deferredPrompt = null;
+
         }
       }
     },
@@ -54,7 +64,7 @@ export default {
 
     window.addEventListener("beforeinstallprompt", (e) => {
       this.deferredPrompt = e;
-        this.installApp();
+        this.notInstalled = true;
     });
 
 
@@ -68,18 +78,19 @@ export default {
       this.refreshing = true;
       window.location.reload();
     });
+
+
   },
 };
 </script>
 
-<style>
+<style scoped>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 
 h1 {
@@ -90,19 +101,4 @@ p {
   font-style: italic;
 }
 
-#updateBanner {
-  padding: 20px;
-  color: green;
-  background-color: #f1f1f1;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-}
-
-button {
-  color: green;
-  border: none;
-  background-color: transparent;
-  cursor: pointer;
-}
 </style>
