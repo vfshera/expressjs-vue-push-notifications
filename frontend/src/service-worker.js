@@ -4,11 +4,15 @@ workbox.setConfig({
 })
 
 
-//PREFIX TO CACHE NAME
+/**
+ * PREFIX TO CACHE NAME
+ */
 workbox.core.setCacheNameDetails({prefix: "pwaapp"});
 
 
-//LISTEN TO MESSAGE FROM UPDATE BANNER ie UpdateBanner.vue
+/**
+ * LISTEN TO MESSAGE FROM UPDATE BANNER ie UpdateBanner.vue
+ */
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
@@ -22,16 +26,22 @@ workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
 
 
-//PUSH NOTIFICATION LISTENER
+/**
+ * PUSH NOTIFICATION LISTENER
+ */
 let click_open_url;
 
 self.addEventListener("push", function(event){
 
-  //GETS NOTIFICATION PAYLOAD IN JSON
+  /**
+   * GETS NOTIFICATION PAYLOAD IN JSON
+   */
   let push_message = event.data.json();
 
 
-  //CAN COME FROM SERVER ie link to blog or product
+  /**
+   * CAN COME FROM SERVER ie link to blog or product
+   */
   click_open_url = "https://vuejs.org";
 
   const options = {
@@ -42,13 +52,17 @@ self.addEventListener("push", function(event){
     tag: "vibration-sample"
    };
 
-   //showNotification(<NOTIFICATION TITLE>,options)
+   /**
+    * showNotification(<NOTIFICATION TITLE>,options)
+    */
    event.waitUntil(self.registration.showNotification(push_message.title,options));
 
 });
 
 
-// WHEN NOTIFICATION IS CLICKED
+/**
+ *  WHEN NOTIFICATION IS CLICKED
+ */
 self.addEventListener("notificationclick",function(event){
   const clickedNotification = event.notification;
 
@@ -65,7 +79,9 @@ self.addEventListener("notificationclick",function(event){
 
 
 
-//CACHING FONTS
+/**
+ * CACHING FONTS
+ */
 workbox.routing.registerRoute(
   new RegExp("https://fonts.(?:googleapis|gstatic).com/(.*)"),
   new workbox.strategies.CacheFirst({

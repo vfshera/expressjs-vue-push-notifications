@@ -34,14 +34,18 @@ export default {
       this.isRefresh = true;
     },
     updateApp() {
-      //ACCEPTS UPDATE
+      /**
+       * ACCEPTS UPDATE
+       */
       this.isRefresh = false;
       if (this.registration || this.registration.waiting) {
         this.registration.waiting.postMessage({ type: "SKIP_WAITING" });
       }
     },
     async installApp() {
-      //HANDLES APP INSTALL
+      /**
+       * HANDLES APP INSTALL
+       */
 
       if (this.deferredPrompt !== null) {
 
@@ -52,7 +56,9 @@ export default {
 
         if (outcome === "accepted") {
 
-          //IF USER INSTALLS
+          /**
+           * IF USER INSTALLS
+           */
 
           this.deferredPrompt = null;
 
@@ -62,7 +68,9 @@ export default {
   },
   created() {
 
-    //HANDLES INSTALL PROMPT
+    /**
+     * HANDLES INSTALL PROMPT
+     */
     window.addEventListener("beforeinstallprompt", (e) => {
       e.preventDefault();      
       this.deferredPrompt = e;
@@ -70,7 +78,9 @@ export default {
     });
 
 
-    //IF NEW UPDATE
+    /**
+     * IF NEW UPDATE
+     */
     document.addEventListener("serviceWorkerUpdateEvent", this.appUpdateUI, {
       once: true,
     });

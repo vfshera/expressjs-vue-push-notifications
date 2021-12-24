@@ -10,14 +10,17 @@ require("dotenv").config();
 
 app.use(bodyParser.json());
 app.use(cors());
-app.use(morgan('tiny'))
+app.use(morgan("tiny"));
 
+/**
+ * GENERATE VERPID KEYS ONCE WITH
+ *
+ * webpush.generateVAPIDKeys()
+ */
 
-
-// GENERATE VERPID KEYS ONCE WITH --> webpush.generateVAPIDKeys()
-
-
-//WEBPUSH CONFIG
+/**
+ *WEBPUSH CONFIG
+ */
 webPush.setVapidDetails(
   "http://mysite.com/contact",
   process.env.VAPID_PUBLIC_KEY,
@@ -28,7 +31,9 @@ app.get("/", (req, res) => {
   res.send("Push Notification Server!");
 });
 
-//SUBSCRIBTION ROUTE
+/**
+ * SUBSCRIBTION ROUTE
+ */
 app.post("/subscribe", (req, res) => {
   // get subscription object
   const subscription = req.body;
@@ -47,14 +52,15 @@ app.post("/subscribe", (req, res) => {
   res.status(201).json("Thanks for Subscribing");
 });
 
-
-
-//NOTIFY SIMULATION ROUTE
+/**
+ * NOTIFY SIMULATION ROUTE
+ */
 app.post("/notify", (req, res) => {
-
-
-  // NB:THIS CAN BE UTILIZED TO  RUN WHEN NEW BLOG OR PRODUCT IS POSTED 
-    //FETCHING SUBSCRIBERS FROM DB
+  /**
+   * NB:THIS CAN BE UTILIZED TO  RUN WHEN NEW BLOG OR PRODUCT IS POSTED
+   *
+   * FETCHING SUBSCRIBERS FROM DB
+   */
   let sql = "SELECT * FROM subscribers";
   let params = [];
 
@@ -70,14 +76,16 @@ app.post("/notify", (req, res) => {
   });
 });
 
-
-
-//HANDLES SENDING OF NOTIFICATIONS TO ALL SUBSCRIBERS
+/**
+ * 
+ * HANDLES SENDING OF NOTIFICATIONS TO ALL SUBSCRIBERS
+ */
 function notify(subscribers) {
   console.log(`Sending Notifications to ${subscribers.length} Subscribers`);
 
-
-  //LOOPING THROUGH EACH SUBSCRIBER
+  /**
+   * LOOPING THROUGH EACH SUBSCRIBER
+   */
   subscribers.forEach((sub) => {
     subscription = JSON.parse(sub.user);
 
@@ -86,16 +94,36 @@ function notify(subscribers) {
       description: "Push notifications from Database",
     });
 
-    //SENDING NOTIFICATION
-    webPush
-      .sendNotification(subscription, payload)
-      .catch((err) => console.error(err));
+    /**
+     * SENDING NOTIFICATION
+     */
+    webPush.sendNotification(subscription, payload).catch((err) => {
+      /**
+       * IF SUBSCRIPTION HAS EXPIRED
+       */
+      if (err.statusCode == 410) {
+        console.log(err.body);
+        /**
+         * WE DELETE IT FROM DB
+         */
+        db.run(
+          "DELETE FROM subscribers WHERE id = ?",
+          sub.id,
+          function (err, result) {
+            if (err) {
+              res.status(400).json({ error: res.message });
+              return;
+            }
+
+            console.log(`Unsubscribing ${sub.id}`);
+          }
+        );
+      }
+    });
 
     console.log(`User ${sub.id} Notified!`);
   });
 }
-
-
 
 app.listen(3000, () =>
   console.log(

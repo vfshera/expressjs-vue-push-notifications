@@ -8,15 +8,20 @@ const publicVapidKey =
 if (process.env.NODE_ENV === "production") {
   register(`${process.env.BASE_URL}service-worker.js`, {
     ready(registration) {
-      // if (!Notification.permission == "granted") {
-        //IF PERMISSION NOT GRANTED
-        //REQUEST PUSH NOTIFICATION PERMISSION
+    
+        /**
+         * REQUEST PUSH NOTIFICATION PERMISSION
+         */
         Notification.requestPermission().then((status) => {
           if (status === "granted") {
-            //IF PERMISSION GRANTED
+            /**
+             * IF PERMISSION GRANTED
+             */
             console.log("Notification Permission Granted!");
 
-            //SUBSCRIBE TO NOTIFICATION
+            /**
+             * SUBSCRIBE TO NOTIFICATION
+             */
             registration.pushManager
               .subscribe({
                 userVisibleOnly: true,
@@ -24,14 +29,15 @@ if (process.env.NODE_ENV === "production") {
               })
               .then(
                 (subscription) => {
-                  //PUSH TO BACKEND
+                  /**
+                   * PUSH TO BACKEND
+                   */
                   sendSubsciption(subscription);
                 },
                 (err) => console.log("Subscription Error : ", err)
               );
           }
         });
-      // }
     },
     registered() {
       console.log("Service worker has been registered.");
@@ -45,7 +51,9 @@ if (process.env.NODE_ENV === "production") {
     updated(registration) {
       console.log("New content is available; please refresh.");
 
-      //CUSTOM EVENT WHEN A NEW UPDATE IS AVAILABLE ie its handled in App.vue at created() hook
+      /**
+       * CUSTOM EVENT WHEN A NEW UPDATE IS AVAILABLE ie its handled in App.vue at created() hook
+       */
 
       document.dispatchEvent(
         new CustomEvent("serviceWorkerUpdateEvent", { detail: registration })
